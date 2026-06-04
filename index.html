@@ -314,7 +314,7 @@
             color: var(--bg-color);
         }
 
-        /* --- SECCIÓN SECTOR PLANILLAS (NUEVO) --- */
+        /* --- SECCIÓN SECTOR PLANILLAS --- */
         .planillas-container {
             padding: 60px 10% 100px 10%;
             min-height: 65vh;
@@ -628,14 +628,66 @@
 
         /* RESPONSIVE MÓVIL PULIDO */
         @media (max-width: 768px) {
-            body { padding-top: 75px; }
-            header { padding: 15px 5%; }
-            .header-left { gap: 15px; }
-            .logo { font-size: 1.1rem; letter-spacing: 0.1em; }
-            .nav-links { gap: 10px; }
-            .nav-links a { font-size: 0.65rem; letter-spacing: 0.05em; }
-            .cart-icon-btn { font-size: 0.75rem; }
-            .about-hero { padding: 60px 5%; }
+            body { padding-top: 115px; } /* Ajustado para el menú de dos filas */
+
+            header {
+                padding: 15px 5%;
+                display: grid;
+                grid-template-columns: 1fr auto;
+                row-gap: 15px;
+                align-items: center;
+            }
+
+            .header-left {
+                display: contents; /* Desintegra el contenedor para reordenar elementos en la cuadrícula */
+            }
+
+            .logo {
+                grid-column: 1;
+                grid-row: 1;
+                font-size: 1.2rem;
+                letter-spacing: 0.15em;
+                justify-self: start;
+            }
+
+            .cart-icon-btn {
+                grid-column: 2;
+                grid-row: 1;
+                font-size: 0.85rem;
+                justify-self: end;
+            }
+
+            .nav-links {
+                grid-column: 1 / span 2;
+                grid-row: 2;
+                display: flex;
+                gap: 20px;
+                overflow-x: auto;
+                white-space: nowrap;
+                scrollbar-width: none; /* Oculta barra en Firefox */
+                padding-bottom: 5px;
+                justify-content: flex-start;
+                width: 100%;
+            }
+
+            .nav-links::-webkit-scrollbar {
+                display: none; /* Oculta barra en Chrome/Safari */
+            }
+
+            .nav-links a {
+                font-size: 0.8rem;
+                letter-spacing: 0.1em;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            .about-hero {
+                padding: 60px 5%;
+                background-attachment: scroll; /* SOLUCIÓN AL SUPER ZOOM: Desactiva el fondo fijo en móviles manteniendo la calidad */
+                background-size: cover;
+                background-position: center;
+            }
+
             .slogan { font-size: 1.5rem; }
             .intro-text { font-size: 0.95rem; }
             .about-details { padding: 50px 5%; grid-template-columns: 1fr; gap: 35px; }
@@ -649,8 +701,13 @@
             .add-to-cart-btn { padding: 8px; font-size: 0.7rem; }
             .category-carousel { margin-bottom: 25px; }
             .category-btn { padding: 8px 15px; font-size: 0.7rem; }
+
+            /* Optimización de Contacto en Celulares */
             .contact-section { padding: 60px 5%; }
-            .contact-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
+            .contact-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+            .contact-card { padding: 25px 15px; }
+            .contact-card a, .contact-card span { font-size: 0.8rem; overflow-wrap: anywhere; }
+
             .cart-sidebar { padding: 20px; }
             .planillas-container { padding: 40px 5%; }
             .planillas-grid { grid-template-columns: 1fr; gap: 15px; }
@@ -803,20 +860,6 @@
                 <h4>Teléfono de Empresa</h4>
                 <a href="https://wa.me/5491173744807" target="_blank">+54 9 11 7374-4807</a>
             </div>
-
-            <div class="contact-card">
-                <div class="contact-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                        <polyline points="10 9 9 9 8 9"></polyline>
-                    </svg>
-                </div>
-                <h4>Documentación</h4>
-                <span onclick="switchView('planillas')">Ver Planillas</span>
-            </div>
         </div>
     </section>
 
@@ -855,21 +898,17 @@
     <script>
         const products = [
             { id: 1, name: "Armaf club de nuit intense man", price: 1650000, category: "FRAGANCIAS", image: "https://i.postimg.cc/tCS9G1v5/ARMAF.png" },
-            { id: 2, name: "Lattafa Khamrah", price: 185000, category: "FRAGANCIAS", image: "https://i.postimg.cc/hvMcjhDR/5.png" },
+            { id: 2, name: "Lattafa Khamrah", price: 18500, category: "FRAGANCIAS", image: "https://i.postimg.cc/hvMcjhDR/5.png" },
             { id: 3, name: "Afnan Supremacy Silver", price: 1500000, category: "FRAGANCIAS", image: "https://i.postimg.cc/zfNtd7Sr/6.png" },
             { id: 4, name: "Lattafa Badee (Oud for glory)", price: 35000, category: "FRAGANCIAS", image: "https://i.postimg.cc/rm3Y9kfN/7.png" },
-            { id: 5, name: "Auriculares Sony WH-1000XM5", price: 520000, category: "TECNOLOGIA", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80" },
-            { id: 6, name: "Billetera Cuero Premium", price: 65000, category: "OTRAS CATEGORIAS", image: "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=500&q=80" }
+          
         ];
 
-        /* --- CONTROLADOR SPA DE VISTAS (NUEVO) --- */
+        /* --- CONTROLADOR SPA DE VISTAS --- */
         function switchView(viewName, targetAnchor = null) {
-            // Ocultar las secciones principales
             document.querySelectorAll('.view-section').forEach(view => view.classList.remove('active-view'));
-            // Quitar el foco activo del menú
             document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
 
-            // Activar la vista correspondiente
             if (viewName === 'tienda') {
                 document.getElementById('view-tienda').classList.add('active-view');
                 if (targetAnchor === 'about') {
