@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBIMPORTED | Tienda Premium</title>
+
+    <!-- Favicon local -->
+    <link rel="icon" href="FAVICON.png">
+
+    <!-- 🚀 OPTIMIZACIÓN: Precarga de LCP (Largest Contentful Paint) -->
+    <link rel="preload" href="FONDOESLOGAN.png" as="image">
+    <link rel="preload" href="LOGOSB.png" as="image">
+
+    <style>
+        /* --- ESTILOS GLOBALES Y VARIABLES --- */
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --text-muted: #8e8e93;
+            --border-color: #1c1c1e;
+            --transition-premium: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            --hero-bg-image: url('FONDOESLOGAN.png');
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; letter-spacing: 0.05em; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; padding-top: 85px; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+
+        /* --- HEADER --- */
+        header { position: fixed; top: 0; left: 0; width: 100%; padding: 25px 10%; display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); z-index: 100; transition: var(--transition-premium); }
+        .header-left { display: flex; align-items: center; gap: 40px; }
+        .logo { font-size: 1.4rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: var(--transition-premium); }
+        .logo:active { transform: scale(0.97); }
+
+        /* --- ENLACES DE NAVEGACIÓN --- */
+        .nav-links { display: flex; gap: 25px; }
+        .nav-links a { color: #636366; font-style: italic; text-decoration: none; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.15em; transition: var(--transition-premium); cursor: pointer; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text-color); }
+        .cart-icon-btn { background: none; border: none; color: var(--text-color); font-size: 1rem; cursor: pointer; text-transform: uppercase; position: relative; padding: 5px; transition: var(--transition-premium); }
+        .cart-icon-btn:hover { color: var(--text-muted); }
+        .cart-icon-btn:active { transform: scale(0.95); }
+        #cart-count { font-size: 0.8rem; margin-left: 5px; border-bottom: 1px solid var(--text-color); }
+
+        /* --- MANEJO DE VISTAS DINÁMICAS --- */
+        .view-section { display: none; opacity: 0; }
+        .view-section.active-view { display: block; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        /* --- SECCIÓN SOBRE NOSOTROS (HERO) --- */
+        .about-section { display: flex; flex-direction: column; border-bottom: 1px solid var(--border-color); }
+        .about-hero { position: relative; background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.95)), var(--hero-bg-image); background-size: contain; background-repeat: no-repeat; background-position: center center; background-attachment: scroll; padding: 150px 10% 130px 10%; text-align: center; border-bottom: 1px solid var(--border-color); }
+        .hero-logo { width: 140px; height: auto; max-width: 100%; margin: 0 auto 10px auto; display: block; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6)); }
+        .slogan { font-family: 'Impact', 'Arial Black', sans-serif; font-size: 3.2rem; font-weight: 400; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0; margin-bottom: 15px; color: var(--text-color); text-align: center; line-height: 1.05; }
+        .intro-text { font-size: 1.05rem; line-height: 1.8; color: #e5e5ea; max-width: 850px; margin: 0 auto; font-weight: 300; }
+        .about-details { padding: 100px 10%; display: grid; grid-template-columns: 1fr 1fr; gap: 50px; background: #000000; }
+        .detail-block { display: flex; flex-direction: column; gap: 15px; }
+        .detail-block h3 { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-color); border-left: 2px solid var(--text-color); padding-left: 15px; }
+        .detail-block p { font-size: 0.95rem; line-height: 1.7; color: var(--text-muted); font-weight: 300; }
+
+        /* --- TIENDA / CONTENEDOR DE PRODUCTOS --- */
+        main { padding: 50px 10% 100px 10%; }
+        .section-title { font-size: 1.4rem; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; font-weight: 500; }
+        .category-carousel { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 40px; scroll-behavior: smooth; scrollbar-width: none; }
+        .category-carousel::-webkit-scrollbar { display: none; }
+        .category-btn { background: none; border: 1px solid var(--border-color); color: var(--text-muted); padding: 12px 24px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; cursor: pointer; white-space: nowrap; transition: var(--transition-premium); border-radius: 4px; }
+        .category-btn:hover, .category-btn.active { border-color: var(--text-color); color: var(--text-color); background: #1c1c1e; }
+        .category-btn:active { transform: scale(0.96); }
+
+        /* --- CATALOGO CON ANIMACIÓN DE ENTRADA --- */
+        .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 40px; }
+        .product-card { display: flex; flex-direction: column; justify-content: space-between; border: 1px solid var(--border-color); padding: 20px; transition: var(--transition-premium); background: #000000; border-radius: 6px; opacity: 0; animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .product-card:hover { border-color: #3a3a3c; transform: translateY(-4px); }
+        .image-container { width: 100%; aspect-ratio: 1 / 1; margin-bottom: 20px; background: linear-gradient(90deg, #1c1c1e 25%, #2c2c2e 50%, #1c1c1e 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite linear; border-radius: 4px; overflow: hidden; }
+        .product-image { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.4s ease; opacity: 0; }
+        .product-card:hover .product-image { transform: scale(1.02); }
+        .product-info { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-grow: 1; }
+        .product-name { font-size: 0.95rem; font-weight: 400; text-transform: uppercase; max-width: 70%; }
+        .product-price { font-size: 0.95rem; color: #ffffff; font-weight: 600; white-space: nowrap; }
+        .add-to-cart-btn { width: 100%; padding: 14px; background: none; border: 1px solid var(--text-color); color: var(--text-color); text-transform: uppercase; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: var(--transition-premium); border-radius: 4px; margin-top: auto; }
+        .add-to-cart-btn:hover { background: var(--text-color); color: var(--bg-color); }
+        .add-to-cart-btn:active { transform: scale(0.97); }
+
+        /* --- SECCIÓN PLANILLAS --- */
+        .planillas-container { padding: 60px 10% 100px 10%; min-height: 65vh; }
+        .planillas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 40px; }
+        .planilla-card { border: 1px solid var(--border-color); background: #000000; padding: 30px; display: flex; flex-direction: column; justify-content: space-between; gap: 20px; transition: var(--transition-premium); border-radius: 6px; }
+        .planilla-card:hover { border-color: #3a3a3c; }
+        .planilla-info h3 { font-size: 1.1rem; text-transform: uppercase; font-weight: 500; letter-spacing: 0.1em; margin-bottom: 8px; }
+        .planilla-info p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+        .download-btn { display: inline-flex; align-items: center; justify-content: center; padding: 14px; border: 1px solid var(--text-color); background: none; color: var(--text-color); text-decoration: none; text-transform: uppercase; font-size: 0.8rem; font-weight: 500; transition: var(--transition-premium); cursor: pointer; border-radius: 4px; }
+        .download-btn:hover { background: var(--text-color); color: var(--bg-color); }
+        .download-btn:active { transform: scale(0.97); }
+
+        /* --- SECCIÓN CONTACTO --- */
+        .contact-section { padding: 90px 10%; background: #000000; border-top: 1px solid var(--border-color); text-align: center; }
+        .contact-subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 50px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6; font-weight: 300; }
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; max-width: 1000px; margin: 0 auto; }
+        .contact-card { border: 1px solid var(--border-color); padding: 40px 30px; background: #000000; transition: var(--transition-premium); display: flex; flex-direction: column; align-items: center; gap: 15px; border-radius: 6px; }
+        .contact-card:hover { border-color: #3a3a3c; }
+        .contact-icon { color: var(--text-color); }
+        .contact-icon svg { width: 32px; height: 32px; }
+        .contact-card h4 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.15em; }
+        .contact-card a { color: var(--text-muted); text-decoration: none; font-size: 1rem; transition: var(--transition-premium); }
+        .contact-card a:hover { color: var(--text-color); }
+        .contact-card:active { transform: scale(0.98); }
+
+        /* --- CARRITO LATERAL --- */
+        .cart-sidebar { position: fixed; top: 0; right: -100%; width: 100%; max-width: 450px; height: 100%; background: #000000; border-left: 1px solid var(--border-color); box-shadow: -20px 0 40px rgba(0,0,0,0.8); z-index: 200; transition: var(--transition-premium); display: flex; flex-direction: column; padding: 40px; }
+        .cart-sidebar.open { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .cart-header h2 { font-size: 1.2rem; text-transform: uppercase; font-weight: 400; }
+        .close-cart-btn { background: none; border: none; color: var(--text-color); font-size: 1.8rem; cursor: pointer; transition: var(--transition-premium); }
+        .close-cart-btn:active { transform: scale(0.85); }
+        .cart-items { flex: 1; overflow-y: auto; margin-bottom: 20px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border-color); }
+        .cart-item-info h4 { font-size: 0.9rem; text-transform: uppercase; font-weight: 400; margin-bottom: 5px; }
+        .cart-item-info p { font-size: 0.85rem; color: var(--text-muted); }
+        .remove-item-btn { background: none; border: none; color: #ff453a; cursor: pointer; font-size: 0.8rem; }
+        .cart-total { display: flex; justify-content: space-between; font-size: 1.1rem; text-transform: uppercase; padding-top: 20px; border-top: 1px solid var(--border-color); margin-bottom: 30px; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 150; opacity: 0; pointer-events: none; transition: var(--transition-premium); }
+        .overlay.active { opacity: 1; pointer-events: auto; }
+
+        /* --- FORMULARIO DE PEDIDO --- */
+        .checkout-form { display: flex; flex-direction: column; gap: 15px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); }
+        .form-group input, .form-group textarea { background: #1c1c1e; border: 1px solid transparent; color: var(--text-color); padding: 14px; font-size: 0.95rem; border-radius: 6px; transition: var(--transition-premium); }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #3a3a3c; background: #2c2c2e; }
+        .submit-order-btn { width: 100%; padding: 16px; background: var(--text-color); color: var(--bg-color); border: none; text-transform: uppercase; font-size: 0.85rem; font-weight: 600; cursor: pointer; margin-top: 10px; transition: var(--transition-premium); border-radius: 6px; }
+        .submit-order-btn:hover { background: #e5e5ea; }
+        .submit-order-btn:active { transform: scale(0.97); }
+
+        /* --- Keyframes de Rendimiento --- */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        /* --- RESPONSIVE MEDIA QUERIES --- */
+        @media (max-width: 1024px) { .planillas-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) {
+            body { padding-top: 115px; }
+            header { padding: 15px 5%; display: grid; grid-template-columns: 1fr auto; row-gap: 15px; }
+            .header-left { display: contents; }
+            .logo { grid-column: 1; grid-row: 1; font-size: 1.2rem; justify-self: start; }
+            .cart-icon-btn { grid-column: 2; grid-row: 1; font-size: 0.85rem; justify-self: end; }
+            .nav-links { grid-column: 1 / span 2; grid-row: 2; display: flex; gap: 20px; overflow-x: auto; scrollbar-width: none; padding-bottom: 5px; width: 100%; }
+            .nav-links a { font-size: 0.8rem; flex-shrink: 0; }
+            .about-hero { padding: 60px 5% 50px 5%; background-size: cover; }
+            .hero-logo { width: 100px; margin-bottom: 8px; }
+            .slogan { font-size: 2rem; margin-bottom: 12px; }
+            .intro-text { font-size: 0.95rem; }
+            .about-details { padding: 60px 5%; grid-template-columns: 1fr; gap: 35px; }
+            main { padding: 30px 5% 50px 5%; }
+            .catalog { grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 15px; }
+            .product-card { padding: 12px; }
+            .image-container { margin-bottom: 12px; }
+            .product-info { flex-direction: column; align-items: flex-start; gap: 4px; margin-bottom: 12px; }
+            .product-name { font-size: 0.8rem; max-width: 100%; }
+            .product-price { font-size: 0.85rem; }
+            .add-to-cart-btn { padding: 10px; font-size: 0.7rem; }
+            .category-carousel { margin-bottom: 25px; gap: 8px; }
+            .category-btn { padding: 10px 16px; font-size: 0.7rem; }
+            .contact-section { padding: 60px 5%; }
+            .contact-grid { grid-template-columns: 1fr; gap: 15px; }
+            .cart-sidebar { padding: 25px; max-width: 100%; }
+            .planillas-container { padding: 40px 5%; }
+            .planillas-grid { grid-template-columns: 1fr; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <div class="logo" onclick="switchView('tienda')">SBIMPORTED</div>
+            <nav class="nav-links" id="main-nav">
+                <a id="nav-about" onclick="switchView('about')">Sobre nosotros</a>
+                <a id="nav-tienda" class="active" onclick="switchView('tienda')">Tienda</a>
+                <a id="nav-planillas" onclick="switchView('planillas')">Planillas</a>
+                <a href="#contacto">Contacto</a>
+            </nav>
+        </div>
+        <button class="cart-icon-btn" onclick="toggleCart()">Carrito (<span id="cart-count">0</span>)</button>
+    </header>
+
+    <!-- VISTA: SOBRE NOSOTROS -->
+    <div id="view-about" class="view-section">
+        <section id="about" class="about-section">
+            <div class="about-hero">
+                <img src="LOGOSB.png" alt="SBIMPORTED Logo" class="hero-logo">
+                <h1 class="slogan">TUS PRODUCTOS, AL PRECIO QUE MERECES.</h1>
+                <p class="intro-text">
+                    Somos SBIMPORTED, tenemos lo que necesitas a tu alcance. Contamos con un amplio inventario disponible y la opción de traer tus productos bajo pedido.
+                    <br>🇨🇳🇺🇸🇵🇾🇦🇷
+                </p>
+            </div>
+            <div class="about-details">
+                <div class="detail-block">
+                    <h3>Tienda</h3>
+                    <p>En la sección de tienda encontrará nuestro inventario disponible para realizar un pedido de forma inmediata.</p>
+                </div>
+                <div class="detail-block">
+                    <h3>Encargues</h3>
+                    <p>Para solicitar un producto bajo pedido, puede acceder a nuestras planillas y verificar la disponibilidad actual.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- VISTA: TIENDA (ACTIVA POR DEFECTO) -->
+    <div id="view-tienda" class="view-section active-view">
+        <main id="tienda">
+            <h2 class="section-title">Catálogo Exclusivo</h2>
+
+            <div class="category-carousel" id="category-carousel">
+                <button class="category-btn active" onclick="filterCategory('TODOS', this)">Todos</button>
+                <button class="category-btn" onclick="filterCategory('SMARTPHONES', this)">Smartphones</button>
+                <button class="category-btn" onclick="filterCategory('APPLE', this)">Apple</button>
+                <button class="category-btn" onclick="filterCategory('FRAGANCIAS', this)">Fragancias</button>
+                <button class="category-btn" onclick="filterCategory('BELLEZA', this)">Belleza</button>
+                <button class="category-btn" onclick="filterCategory('TECNOLOGIA', this)">Tecnología</button>
+                <button class="category-btn" onclick="filterCategory('OTRAS CATEGORIAS', this)">Otras Categorías</button>
+            </div>
+
+            <div class="catalog" id="catalog-container"></div>
+        </main>
+    </div>
+
+    <!-- VISTA: PLANILLAS -->
+    <div id="view-planillas" class="view-section">
+        <div class="planillas-container">
+            <h2 class="section-title">Planillas</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem; font-weight: 300; max-width: 600px; line-height: 1.6; margin-bottom: 20px;">
+                Descarga nuestros catálogos especializados y listas de disponibilidad actualizadas para realizar tus encargues directos.
+            </p>
+
+            <div class="planillas-grid">
+                <div class="planilla-card">
+                    <div class="planilla-info">
+                        <h3>Informática Collection</h3>
+                        <p>Catálogo de componentes informáticos, periféricos y laptops bajo pedido.</p>
+                    </div>
+                    <a href="Planillas/INFORMATICACOLECCTION.pdf" download class="download-btn">Descargar PDF</a>
+                </div>
+                <div class="planilla-card">
+                    <div class="planilla-info">
+                        <h3>Apple Collection</h3>
+                        <p>Lista oficial de iPhones, MacBooks, iPads y accesorios Apple de fábrica.</p>
+                    </div>
+                    <a href="#" target="_blank" class="download-btn">Descargar PDF</a>
+                </div>
+                <div class="planilla-card">
+                    <div class="planilla-info">
+                        <h3>Smartphones Collection</h3>
+                        <p>Dispositivos de telefonía celular de las marcas globales más destacadas.</p>
+                    </div>
+                    <a href="#" target="_blank" class="download-btn">Descargar PDF</a>
+                </div>
+                <div class="planilla-card">
+                    <div class="planilla-info">
+                        <h3>Fragancias Collection</h3>
+                        <p>Líneas de perfumería fina, fragancias de diseñador y colecciones exclusivas.</p>
+                    </div>
+                    <a href="#" target="_blank" class="download-btn">Descargar PDF</a>
+                </div>
+                <div class="planilla-card">
+                    <div class="planilla-info">
+                        <h3>Tech Collection</h3>
+                        <p>Accesorios inteligentes, audio de alta fidelidad, gadgets y domótica.</p>
+                    </div>
+                    <a href="#" target="_blank" class="download-btn">Descargar PDF</a>
+                </div>
+                <div class="planilla-card">
+                    <div class="planilla-info">
+                        <h3>Otras Categorías</h3>
+                        <p>Catálogos complementarios y listado general para requerimientos especiales.</p>
+                    </div>
+                    <a href="#" target="_blank" class="download-btn">Descargar PDF</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="contacto" class="contact-section">
+        <h2 class="section-title">Contacto</h2>
+        <p class="contact-subtitle">
+            Conectamos tus aspiraciones con los mejores mercados del mundo. Escríbenos o llámanos directamente para gestionar tus pedidos personalizados.
+        </p>
+        <div class="contact-grid">
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                </div>
+                <h4>Correo Electrónico</h4>
+                <a href="mailto:Sbimports.arg@gmail.com">Sbimports.arg@gmail.com</a>
+            </div>
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1 2 1.72z"></path>
+                    </svg>
+                </div>
+                <h4>Teléfono de Empresa</h4>
+                <a href="https://wa.me/5491173744807" target="_blank">+54 9 11 7374-4807</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="overlay" id="overlay" onclick="toggleCart()"></div>
+
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2>Tu Carrito</h2>
+            <button class="close-cart-btn" onclick="toggleCart()">&times;</button>
+        </div>
+
+        <div class="cart-items" id="cart-items-container"></div>
+
+        <div class="cart-total">
+            <span>Total:</span>
+            <span id="cart-total-price">$0</span>
+        </div>
+
+        <form class="checkout-form" id="checkout-form" onsubmit="sendOrder(event)">
+            <div class="form-group">
+                <label for="client-name">Nombre y Apellido</label>
+                <input type="text" id="client-name" required placeholder="Ej. Juan Pérez">
+            </div>
+            <div class="form-group">
+                <label for="client-phone">Número de Teléfono</label>
+                <input type="tel" id="client-phone" required placeholder="Ej. 11 7374-4807">
+            </div>
+            <div class="form-group">
+                <label for="client-notes">Aclaraciones</label>
+                <textarea id="client-notes" placeholder="Talle, color, especificaciones..."></textarea>
+            </div>
+            <button type="submit" class="submit-order-btn">Enviar Pedido por WhatsApp</button>
+        </form>
+    </div>
+
+    <script>
+        /* 🚀 OPTIMIZACIÓN: Caché de nodos DOM para evitar múltiples accesos (mejora rendimiento) */
+        const DOM = {
+            views: document.querySelectorAll('.view-section'),
+            navLinks: document.querySelectorAll('.nav-links a'),
+            catalogContainer: document.getElementById('catalog-container'),
+            cartSidebar: document.getElementById('cart-sidebar'),
+            overlay: document.getElementById('overlay'),
+            cartCount: document.getElementById('cart-count'),
+            cartItemsContainer: document.getElementById('cart-items-container'),
+            cartTotalPrice: document.getElementById('cart-total-price'),
+            categoryButtons: document.querySelectorAll('.category-btn'),
+            clientName: document.getElementById('client-name'),
+            clientPhone: document.getElementById('client-phone'),
+            clientNotes: document.getElementById('client-notes')
+        };
+
+        const products = [
+            { id: 1, name: "Armaf club de nuit intense man", price: 75000, category: "FRAGANCIAS", image: "FOTOSTOCK/4.png" },
+            { id: 2, name: "Lattafa Khamrah", price: 49000, category: "FRAGANCIAS", image: "FOTOSTOCK/5.png" },
+            { id: 3, name: "Afnan Supremacy Silver", price: 69000, category: "FRAGANCIAS", image: "FOTOSTOCK/6.png" },
+            { id: 4, name: "Lattafa Badee (Oud for glory)", price: 49000, category: "FRAGANCIAS", image: "FOTOSTOCK/7.png" },
+            { id: 5, name: "ARMAF ODYSSEY AQUA EDP 100ML ", price: 70000, category: "FRAGANCIAS", image: "FOTOSTOCK/17.png" },
+            { id: 6, name: "LATTAFA BAYAAN EDP 100ML", price: 45000, category: "FRAGANCIAS", image: "FOTOSTOCK/16.png" },
+            { id: 7, name: "LATTAFA THE KINGDOM EDP 100ML", price: 65000, category: "FRAGANCIAS", image: "FOTOSTOCK/15.png" },
+            { id: 8, name: "LATTAFA QIMMAH EDP 100ML", price: 50000, category: "FRAGANCIAS", image: "FOTOSTOCK/11.png" },
+            { id: 9, name: "LATTAFA PRIDE NATURAL OUD EDP 100ML", price: 60000, category: "FRAGANCIAS", image: "FOTOSTOCK/12.png" },
+            { id: 10, name: "LATTAFA FAKHAR PLATIN EDP  100ML", price: 60000, category: "FRAGANCIAS", image: "FOTOSTOCK/9.png" },
+            { id: 11, name: "MAISON ALHAMBRA GALATIC  ELIXIR  EDP 100ML", price: 45000, category: "FRAGANCIAS", image: "FOTOSTOCK/14.png" },
+            { id: 12, name: "MAISON ALHAMBRA VICTORIOSO FEARLEES EDP 100ML", price: 45000, category: "FRAGANCIAS", image: "FOTOSTOCK/10.png" },
+            { id: 13, name: "MAISON ALHAMBRA PHILOS PURA EDP 100ML", price: 55000, category: "FRAGANCIAS", image: "FOTOSTOCK/13.png" },
+            { id: 14, name: "AURICULAR XIAOMI BUDS 6 PLAY", price: 30000, category: "TECNOLOGIA", image: "FOTOSTOCK/20.png" },
+            { id: 15, name: "AURICULAR XIAOMI  MI BASIC 3.5", price: 9999, category: "TECNOLOGIA", image: "FOTOSTOCK/22.png" },
+            { id: 16, name: "AURICULAR HAYLOU HQ5", price: 33000, category: "TECNOLOGIA", image: "FOTOSTOCK/21.png" },
+            { id: 17, name: "PARLANTE BLUETOOTH XIAOMI MINI", price: 69000, category: "TECNOLOGIA", image: "FOTOSTOCK/19.png" },
+            { id: 18, name: "SMARTWACH  HAYLOU WATCH 3", price: 70000, category: "TECNOLOGIA", image: "FOTOSTOCK/18.png" },
+            { id: 19, name: "CARGADOR XIAOMI C CABLE 33W TIPO A", price: 24800, category: "FRAGANCIAS", image: "FOTOSTOCK/25.png" },
+            { id: 20, name: "SMARTPHONE POCO C81 PRO", price: 240000, category: "SMARTPHONES", image: "FOTOSTOCK/24.png" },
+            { id: 21, name: "CAMARA DE ACCION SJCAM SJ4000 4K", price: 99000, category: "TECNOLOGIA", image: "FOTOSTOCK/23.png" },
+            { id: 22, name: "Audífonos Xiaomi Tipo C", price: 12000, category: "TECNOLOGIA", image: "FOTOSTOCK/26.png" },
+            { id: 23, name: "Maison Alhambra Philos Opus Noir 100ML", price: 55000, category: "FRAGANCIAS", image: "FOTOSTOCK/27.png" },
+            { id: 24, name: "Maison Alhambra Pacific Blue EDP 30ML", price: 22000, category: "FRAGANCIAS", image: "FOTOSTOCK/28.png" },
+            { id: 25, name: "Maison Alhambra Florenza EDP 30ML", price: 21900, category: "FRAGANCIAS", image: "FOTOSTOCK/29.png" },
+            { id: 26, name: "Smartwatch Haylou Watch 2 Pro (Negro)", price: 70000, category: "TECNOLOGIA", image: "FOTOSTOCK/30.png" },
+            { id: 27, name: "Smartwatch Haylou Solar Pro LS18 (Marron)", price: 70000, category: "TECNOLOGIA", image: "FOTOSTOCK/31.png" },
+            { id: 28, name: "Smartwatch Haylou Solar Pro LS18 (Plateado)", price: 70000, category: "TECNOLOGIA", image: "FOTOSTOCK/32.png" },
+            { id: 29, name: "Óleo Reparador Karseell Maca Power 50ML", price: 19900, category: "BELLEZA", image: "FOTOSTOCK/2.png" },
+            { id: 30, name: "Maison Alhambra Your Touch Amber 100ML", price: 40000, category: "FRAGANCIAS", image: "FOTOSTOCK/34.png" },
+            { id: 31, name: "Armaf Club de Nuit Untold EDP 105ML", price: 70000, category: "FRAGANCIAS", image: "FOTOSTOCK/35.png" },
+            { id: 32, name: "Altavoz Xiaomi Mi Portable Outdoor", price: 75000, category: "TECNOLOGIA", image: "FOTOSTOCK/36.png" },
+            { id: 33, name: "Apple AirPods 4 Inalámbricos Blanco", price: 199000, category: "APPLE", image: "FOTOSTOCK/37.png" },
+            { id: 34, name: "Proyector G-Tide PJ10 HD 720p ", price: 189000, category: "TECNOLOGIA", image: "FOTOSTOCK/38.png" },
+            { id: 35, name: "Lattafa Victoria EDP 100ml", price: 55000, category: "FRAGANCIAS", image: "FOTOSTOCK/39.png" },
+            { id: 36, name: "Maison Alhambra Jean Lowe Noir EDP 30ml", price: 22000, category: "FRAGANCIAS", image: "FOTOSTOCK/40.png" },
+            { id: 37, name: "Rasasi Hawas Ice EDP 100ml", price: 80000, category: "FRAGANCIAS", image: "FOTOSTOCK/41.png" },
+            { id: 38, name: "Perfume Armaf Odyssey Mandarin Sky EDP 100ML", price: 68000, category: "FRAGANCIAS", image: "FOTOSTOCK/47.png" },
+            { id: 39, name: "Control Sony DualSense PS5", price: 119000, category: "TECNOLOGIA", image: "FOTOSTOCK/42.png" },
+            { id: 40, name: "Vaso Térmico Xiaomi Straw Mug", price: 45000, category: "OTRAS CATEGORIAS", image: "FOTOSTOCK/46.png" },
+            { id: 41, name: "Compresor de Aire Portátil Xiaomi 2", price: 75000, category: "TECNOLOGIA", image: "FOTOSTOCK/44.png" },
+            { id: 43, name: "Compresor de Aire compact Xiaomi", price: 70000, category: "TECNOLOGIA", image: "FOTOSTOCK/45.png" },
+        ];
+
+        let cart = [];
+        let currentCategory = "TODOS";
+
+        function switchView(viewName) {
+            DOM.views.forEach(view => view.classList.remove('active-view'));
+            DOM.navLinks.forEach(link => link.classList.remove('active'));
+
+            if (viewName === 'about') {
+                document.getElementById('view-about').classList.add('active-view');
+                document.getElementById('nav-about').classList.add('active');
+            } else if (viewName === 'tienda') {
+                document.getElementById('view-tienda').classList.add('active-view');
+                document.getElementById('nav-tienda').classList.add('active');
+            } else if (viewName === 'planillas') {
+                document.getElementById('view-planillas').classList.add('active-view');
+                document.getElementById('nav-planillas').classList.add('active');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderCatalog() {
+            const filteredProducts = currentCategory === "TODOS" ? products : products.filter(p => p.category === currentCategory);
+
+            if(filteredProducts.length === 0) {
+                DOM.catalogContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; grid-column: 1/-1; margin-top: 20px;">No hay productos en esta categoría por el momento.</p>';
+                return;
+            }
+
+            /* 🚀 OPTIMIZACIÓN: Se procesa el HTML en un solo paso string (Reflow optimizado) */
+            DOM.catalogContainer.innerHTML = filteredProducts.map((product, index) => `
+                <div class="product-card" style="animation-delay: ${index * 0.05}s">
+                    <div class="image-container">
+                        <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy" decoding="async" onload="this.style.opacity=1">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">${product.name}</h3>
+                        <span class="product-price">$${product.price.toLocaleString()}</span>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCart(${product.id})">Agregar</button>
+                </div>
+            `).join('');
+        }
+
+        function filterCategory(category, buttonElement) {
+            currentCategory = category;
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            buttonElement.classList.add('active');
+            renderCatalog();
+        }
+
+        function toggleCart() {
+            DOM.cartSidebar.classList.toggle('open');
+            DOM.overlay.classList.toggle('active');
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const cartItem = cart.find(item => item.id === productId);
+            if (cartItem) { cartItem.quantity++; } else { cart.push({ ...product, quantity: 1 }); }
+            updateCart();
+            setTimeout(() => { if(!DOM.cartSidebar.classList.contains('open')) { toggleCart(); } }, 150);
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCart();
+        }
+
+        /* 🚀 OPTIMIZACIÓN: Reducción de bucles (se calcula el precio y cantidad en una sola pasada iterativa) */
+        function updateCart() {
+            let totalItems = 0;
+            let totalCost = 0;
+            let htmlContent = '';
+
+            if (cart.length === 0) {
+                htmlContent = '<p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; margin-top: 40px;">El carrito está vacío.</p>';
+            } else {
+                cart.forEach(item => {
+                    totalItems += item.quantity;
+                    totalCost += (item.price * item.quantity);
+                    htmlContent += `
+                        <div class="cart-item">
+                            <div class="cart-item-info">
+                                <h4>${item.name}</h4>
+                                <p>${item.quantity}x - $${(item.price * item.quantity).toLocaleString()}</p>
+                            </div>
+                            <button class="remove-item-btn" onclick="removeFromCart(${item.id})">Quitar</button>
+                        </div>
+                    `;
+                });
+            }
+
+            DOM.cartCount.textContent = totalItems;
+            DOM.cartItemsContainer.innerHTML = htmlContent;
+            DOM.cartTotalPrice.textContent = `$${totalCost.toLocaleString()}`;
+        }
+
+        function sendOrder(event) {
+            event.preventDefault();
+            if (cart.length === 0) { alert("Tu carrito está vacío."); return; }
+
+            const name = DOM.clientName.value;
+            const phone = DOM.clientPhone.value;
+            const notes = DOM.clientNotes.value || "Ninguna";
+            const businessPhone = "5491173744807";
+
+            let message = `*SOLICITUD DE PEDIDO - SBIMPORTED*\n-------------------------------------\n\n*Datos del cliente:*\n• *Nombre y apellido:* ${name}\n• *Número de teléfono:* ${phone}\n• *Aclaraciones:* ${notes}\n\n*Detalle de productos:*\n`;
+
+            let totalCost = 0;
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                totalCost += itemTotal;
+                message += `• ${item.quantity}x ${item.name} (_$${itemTotal.toLocaleString()}_)\n`;
+            });
+
+            message += `\n*TOTAL: $${totalCost.toLocaleString()}*\n-------------------------------------`;
+
+            window.open("https://wa.me/" + businessPhone + "?text=" + encodeURIComponent(message), '_blank');
+        }
+
+        window.onload = renderCatalog;
+    </script>
+</body>
+</html>
