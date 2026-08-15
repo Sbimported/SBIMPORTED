@@ -58,7 +58,7 @@
         .detail-block p { font-size: 0.95rem; line-height: 1.7; color: var(--text-muted); font-weight: 300; }
 
         /* --- TIENDA / CONTENEDOR DE PRODUCTOS --- */
-        main { padding: 100px 10%; }
+        main { padding: 50px 10% 100px 10%; }
         .section-title { font-size: 1.4rem; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; font-weight: 500; }
         .category-carousel { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 40px; scroll-behavior: smooth; scrollbar-width: none; }
         .category-carousel::-webkit-scrollbar { display: none; }
@@ -149,7 +149,7 @@
             .slogan { font-size: 2rem; margin-bottom: 12px; }
             .intro-text { font-size: 0.95rem; }
             .about-details { padding: 60px 5%; grid-template-columns: 1fr; gap: 35px; }
-            main { padding: 50px 5%; }
+            main { padding: 30px 5% 50px 5%; }
             .catalog { grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 15px; }
             .product-card { padding: 12px; }
             .image-container { margin-bottom: 12px; }
@@ -173,8 +173,8 @@
         <div class="header-left">
             <div class="logo" onclick="switchView('tienda')">SBIMPORTED</div>
             <nav class="nav-links" id="main-nav">
-                <a id="nav-about" onclick="switchView('tienda', 'about')">Sobre nosotros</a>
-                <a id="nav-tienda" class="active" onclick="switchView('tienda', 'tienda')">Tienda</a>
+                <a id="nav-about" onclick="switchView('about')">Sobre nosotros</a>
+                <a id="nav-tienda" class="active" onclick="switchView('tienda')">Tienda</a>
                 <a id="nav-planillas" onclick="switchView('planillas')">Planillas</a>
                 <a href="#contacto">Contacto</a>
             </nav>
@@ -182,7 +182,8 @@
         <button class="cart-icon-btn" onclick="toggleCart()">Carrito (<span id="cart-count">0</span>)</button>
     </header>
 
-    <div id="view-tienda" class="view-section active-view">
+    <!-- VISTA: SOBRE NOSOTROS -->
+    <div id="view-about" class="view-section">
         <section id="about" class="about-section">
             <div class="about-hero">
                 <img src="LOGOSB.png" alt="SBIMPORTED Logo" class="hero-logo">
@@ -203,7 +204,10 @@
                 </div>
             </div>
         </section>
+    </div>
 
+    <!-- VISTA: TIENDA (ACTIVA POR DEFECTO) -->
+    <div id="view-tienda" class="view-section active-view">
         <main id="tienda">
             <h2 class="section-title">Catálogo Exclusivo</h2>
 
@@ -221,6 +225,7 @@
         </main>
     </div>
 
+    <!-- VISTA: PLANILLAS -->
     <div id="view-planillas" class="view-section">
         <div class="planillas-container">
             <h2 class="section-title">Planillas</h2>
@@ -234,7 +239,7 @@
                         <h3>Informática Collection</h3>
                         <p>Catálogo de componentes informáticos, periféricos y laptops bajo pedido.</p>
                     </div>
-                    <a href="./PLANILLAS/INFORMATICACOLECCTION.pdf" download class="download-btn">Descargar PDF</a>
+                    <a href="Planillas/INFORMATICACOLECCTION.pdf" download class="download-btn">Descargar PDF</a>
                 </div>
                 <div class="planilla-card">
                     <div class="planilla-info">
@@ -374,29 +379,48 @@
             { id: 19, name: "CARGADOR XIAOMI C CABLE 33W TIPO A", price: 24800, category: "FRAGANCIAS", image: "FOTOSTOCK/25.png" },
             { id: 20, name: "SMARTPHONE POCO C81 PRO", price: 240000, category: "SMARTPHONES", image: "FOTOSTOCK/24.png" },
             { id: 21, name: "CAMARA DE ACCION SJCAM SJ4000 4K", price: 99000, category: "TECNOLOGIA", image: "FOTOSTOCK/23.png" },
+            { id: 22, name: "Audífonos Xiaomi Tipo C", price: 12000, category: "TECNOLOGIA", image: "FOTOSTOCK/26.png" },
+            { id: 23, name: "Maison Alhambra Philos Opus Noir 100ML", price: 55000, category: "FRAGANCIAS", image: "FOTOSTOCK/27.png" },
+            { id: 24, name: "Maison Alhambra Pacific Blue EDP 30ML", price: 22000, category: "FRAGANCIAS", image: "FOTOSTOCK/28.png" },
+            { id: 25, name: "Maison Alhambra Florenza EDP 30ML", price: 21900, category: "FRAGANCIAS", image: "FOTOSTOCK/29.png" },
+            { id: 26, name: "Smartwatch Haylou Watch 2 Pro (Negro)", price: 70000, category: "TECNOLOGIA", image: "FOTOSTOCK/30.png" },
+            { id: 27, name: "Smartwatch Haylou Solar Pro LS18 (Marron)", price: 70000, category: "TECNOLOGIA", image: "FOTOSTOCK/31.png" },
+            { id: 28, name: "Smartwatch Haylou Solar Pro LS18 (Plateado)", price: 70000, category: "TECNOLOGIA", image: "FOTOSTOCK/32.png" },
+            { id: 29, name: "Óleo Reparador Karseell Maca Power 50ML", price: 19900, category: "BELLEZA", image: "FOTOSTOCK/2.png" },
+            { id: 30, name: "Maison Alhambra Your Touch Amber 100ML", price: 40000, category: "FRAGANCIAS", image: "FOTOSTOCK/34.png" },
+            { id: 31, name: "Armaf Club de Nuit Untold EDP 105ML", price: 70000, category: "FRAGANCIAS", image: "FOTOSTOCK/35.png" },
+            { id: 32, name: "Altavoz Xiaomi Mi Portable Outdoor", price: 75000, category: "TECNOLOGIA", image: "FOTOSTOCK/36.png" },
+            { id: 33, name: "Apple AirPods 4 Inalámbricos Blanco", price: 199000, category: "APPLE", image: "FOTOSTOCK/37.png" },
+            { id: 34, name: "Proyector G-Tide PJ10 HD 720p ", price: 189000, category: "TECNOLOGIA", image: "FOTOSTOCK/38.png" },
+            { id: 35, name: "Lattafa Victoria EDP 100ml", price: 55000, category: "FRAGANCIAS", image: "FOTOSTOCK/39.png" },
+            { id: 36, name: "Maison Alhambra Jean Lowe Noir EDP 30ml", price: 22000, category: "FRAGANCIAS", image: "FOTOSTOCK/40.png" },
+            { id: 37, name: "Rasasi Hawas Ice EDP 100ml", price: 80000, category: "FRAGANCIAS", image: "FOTOSTOCK/41.png" },
+            { id: 38, name: "Perfume Armaf Odyssey Mandarin Sky EDP 100ML", price: 68000, category: "FRAGANCIAS", image: "FOTOSTOCK/47.png" },
+            { id: 39, name: "Control Sony DualSense PS5", price: 119000, category: "TECNOLOGIA", image: "FOTOSTOCK/42.png" },
+            { id: 40, name: "Vaso Térmico Xiaomi Straw Mug", price: 45000, category: "OTRAS CATEGORIAS", image: "FOTOSTOCK/46.png" },
+            { id: 41, name: "Compresor de Aire Portátil Xiaomi 2", price: 75000, category: "TECNOLOGIA", image: "FOTOSTOCK/44.png" },
+            { id: 43, name: "Compresor de Aire compact Xiaomi", price: 70000, category: "TECNOLOGIA", image: "FOTOSTOCK/45.png" },
         ];
 
         let cart = [];
         let currentCategory = "TODOS";
 
-        function switchView(viewName, targetAnchor = null) {
+        function switchView(viewName) {
             DOM.views.forEach(view => view.classList.remove('active-view'));
             DOM.navLinks.forEach(link => link.classList.remove('active'));
 
-            if (viewName === 'tienda') {
+            if (viewName === 'about') {
+                document.getElementById('view-about').classList.add('active-view');
+                document.getElementById('nav-about').classList.add('active');
+            } else if (viewName === 'tienda') {
                 document.getElementById('view-tienda').classList.add('active-view');
-                if (targetAnchor === 'about') {
-                    document.getElementById('nav-about').classList.add('active');
-                    document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
-                } else {
-                    document.getElementById('nav-tienda').classList.add('active');
-                    document.getElementById('tienda').scrollIntoView({ behavior: 'smooth' });
-                }
+                document.getElementById('nav-tienda').classList.add('active');
             } else if (viewName === 'planillas') {
                 document.getElementById('view-planillas').classList.add('active-view');
                 document.getElementById('nav-planillas').classList.add('active');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function renderCatalog() {
